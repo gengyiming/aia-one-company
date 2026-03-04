@@ -19,3 +19,5 @@
 # Temp files
 Thumbs.db
 *.tmp
+**/__pycache__/
+*.pyc
