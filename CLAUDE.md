@@ -102,6 +102,10 @@ CEO（用户）
 - 必须回写或新建对应产品卡：`02-business-dev/knowledge/product-cards/`
 - 必须保证 Dataview 关键字段完整：`official_name` / `category` / `status` / `tags`
 
+若输入命中投资移民专题关键词（`CIES` / `新资本投资者入境计划` / `香港新资本投资计划` / `投资移民`）：
+- 必须先回写专题总控：`[[_agent-system/topics/香港新资本投资者入境计划-专题总控]]`
+- 再按专题入口分派到业务/营销/数据/客服
+
 常用指令（给 CEO）
 - 「新输入 PDF: [[文件名.pdf]]，目标是 [用途]」
 - 「新输入 客户: [姓名 + 基本资料]，目标是 [需求]」

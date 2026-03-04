@@ -18,11 +18,26 @@ created: 2026-03-03
 ## 总流程
 
 1. 识别输入类型：`pdf` / `customer_info` / `image` / `voice` / `webpage` / `other`
-2. 原件归档到 `_agent-system/intake/raw/`（必要时同时生成文本与预览）
-3. 创建 Intake 任务（放到 `_agent-system/tasks/`）
-4. 先按模板生成结构化 Markdown：`[[_agent-system/templates/输入任务-结构化输出模板]]`
-5. 通过质量门槛后，再创建二级任务分派到部门
-6. 在 `[[_agent-system/inbox]]` 跟踪状态并回收交付
+2. 识别是否命中专题关键词（见“专题路由规则”）
+3. 原件归档到 `_agent-system/intake/raw/`（必要时同时生成文本与预览）
+4. 创建 Intake 任务（放到 `_agent-system/tasks/`）
+5. 先按模板生成结构化 Markdown：`[[_agent-system/templates/输入任务-结构化输出模板]]`
+6. 通过质量门槛后，再创建二级任务分派到部门
+7. 在 `[[_agent-system/inbox]]` 跟踪状态并回收交付
+
+## 专题路由规则
+
+命中以下关键词时，默认路由到 CIES 专题：
+- `CIES`
+- `新资本投资者入境计划`
+- `香港新资本投资计划`
+- `投资移民`
+- `净资产3000万`
+
+执行动作：
+1. 结构化文件正文增加“专题归属：`[[_agent-system/topics/香港新资本投资者入境计划-专题总控]]`”
+2. Intake 任务 `tags` 必须包含 `投资移民` 或 `CIES`
+3. 下游分派优先使用专题既有入口（业务/营销/数据/客服）而非新建散落文档
 
 ## PDF 输入流程
 
