@@ -57,10 +57,11 @@ created: 2026-03-03
 ## 客户信息输入流程
 
 1. 用模板：`[[_agent-system/templates/输入任务-客户信息模板]]`
-2. 首先更新/创建：
-- `[[03-customer-service/clients/_客户总览]]`
-- 对应客户档案 `03-customer-service/clients/[客户名].md`
-- `[[02-business-dev/客户Pipeline]]`
+2. 首先更新/创建（**客户档案 Single Source of Truth**）：
+- 使用统一模板：`[[03-customer-service/clients/_客户档案模板]]`
+- 创建/更新客户档案：`03-customer-service/clients/[客户名].md`
+- `[[03-customer-service/clients/_客户总览]]` 会自动通过 Dataview 汇总
+- `[[02-business-dev/客户Pipeline]]` 会自动通过 Dataview 聚合销售视角数据（无需手动维护）
 3. 先生成结构化输入文件，再自动拆分后续任务：
 - 需求评估 -> `business_dev`
 - 服务待办（检视/续保/理赔）-> `customer_service`

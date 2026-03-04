@@ -1,18 +1,32 @@
 ---
 tags: [业务, Pipeline]
 created: 2026-03-03
-updated: 2026-03-03
+updated: 2026-03-04
 ---
 
 # 客户 Pipeline
 
-## Pipeline 总览
+> **数据来源**：所有客户档案统一存放在 `[[03-customer-service/clients/_客户总览]]`。
+> 本页面通过 Dataview 自动聚合销售视角的数据，不再独立维护客户基本信息。
+
+## Pipeline 总览（自动汇总）
 
 ```dataview
-TABLE status AS "状态", category AS "需求类别", next_followup AS "下次跟进", source AS "来源"
-FROM "02-business-dev/cases"
-WHERE status != "已成交" AND status != "已流失"
+TABLE sales_stage AS "销售阶段", category AS "需求类别", next_followup AS "下次跟进", source AS "来源", annual_income_range AS "收入范围"
+FROM "03-customer-service/clients"
+WHERE file.name != "_客户总览" AND file.name != "_客户档案模板"
+WHERE sales_stage != "已成交" AND sales_stage != "已流失"
 SORT next_followup ASC
+```
+
+## 按阶段分布
+
+```dataview
+TABLE length(rows) AS "客户数"
+FROM "03-customer-service/clients"
+WHERE file.name != "_客户总览" AND file.name != "_客户档案模板"
+GROUP BY sales_stage
+SORT length(rows) DESC
 ```
 
 ## 阶段说明
@@ -27,18 +41,27 @@ SORT next_followup ASC
 | 已成交 | 已签单 | 售后服务，转介绍 |
 | 已流失 | 暂时不跟进 | 定期保持联系 |
 
-## 手动追踪表
+## 本周重点跟进
 
-> 以下为手动记录区域，Dataview 会自动从 cases/ 中汇总
+```dataview
+TABLE sales_stage AS "阶段", category AS "需求", next_followup AS "跟进日期"
+FROM "03-customer-service/clients"
+WHERE file.name != "_客户总览" AND file.name != "_客户档案模板"
+WHERE next_followup <= date(today) + dur(7 days) AND next_followup
+WHERE sales_stage != "已成交" AND sales_stage != "已流失"
+SORT next_followup ASC
+```
 
-| 客户 | 状态 | 需求 | 下次跟进 | 备注 |
-|------|------|------|---------|------|
-| （示例）张先生 | 需求分析中 | 危疾+储蓄 | 2026-03-10 | 35岁IT经理，已婚有两个小孩 |
+## 已成交客户
+
+```dataview
+TABLE category AS "产品类别", annual_premium AS "年保费", source AS "来源"
+FROM "03-customer-service/clients"
+WHERE file.name != "_客户总览" AND file.name != "_客户档案模板"
+WHERE sales_stage = "已成交"
+SORT annual_premium DESC
+```
 
 ---
 
-## 本周重点跟进
-
-> 每周更新
-
--
+**新建客户**：使用统一模板 `[[03-customer-service/clients/_客户档案模板]]`，存放到 `03-customer-service/clients/` 目录。
