@@ -2,5 +2,20 @@
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
 .obsidian/plugins/recent-files-obsidian/data.json
+.obsidian/cache/
+.obsidian/plugins/*/data.json
 .trash/
 .DS_Store
+
+# Sensitive data
+**/客户原始数据/
+**/*身份证*
+**/*護照*
+**/*护照*
+**/*银行*
+*.secret
+.env
+
+# Temp files
+Thumbs.db
+*.tmp
