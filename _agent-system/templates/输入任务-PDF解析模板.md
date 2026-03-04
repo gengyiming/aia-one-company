@@ -11,6 +11,7 @@ due: 2026-03-04
 source_file: "[[路径/文件.pdf]]"
 deliverable: "[[_agent-system/intake/parsed/PDF-解析结果-YYYYMMDD]]"
 structured_output: "[[_agent-system/intake/parsed/输入结构化-YYYYMMDD-XXX]]"
+full_content_output: "[[_agent-system/intake/parsed/PDF-full-YYYYMMDD-xxx]]"
 is_product_file: false
 product_card_paths: []
 review_score: ""
@@ -26,6 +27,7 @@ tags: [任务, 输入处理, PDF]
 
 ## 解析要求
 - [ ] 先生成结构化 Markdown（使用 `[[_agent-system/templates/输入任务-结构化输出模板]]`）
+- [ ] 生成全量覆盖 Markdown（逐页全文，覆盖原 PDF 全部页面）
 - [ ] 200 字内摘要
 - [ ] 关键字段表（客户名/产品/金额/时间）
 - [ ] 风险点与待确认项

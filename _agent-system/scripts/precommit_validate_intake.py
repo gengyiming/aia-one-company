@@ -139,6 +139,18 @@ def to_list(value: Any) -> list[str]:
     return [text]
 
 
+def unique_paths(paths: list[Path]) -> list[Path]:
+    out: list[Path] = []
+    seen = set()
+    for p in paths:
+        key = p.as_posix()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(p)
+    return out
+
+
 def boolish(value: Any) -> bool:
     if isinstance(value, bool):
         return value
@@ -164,6 +176,31 @@ def looks_like_product_file(raw_source_file: Any) -> bool:
         "計劃ppt",
     ]
     return any(keyword in text for keyword in keywords)
+
+
+def resolve_paths_from_values(values: list[Any]) -> list[Path]:
+    paths: list[Path] = []
+    for value in values:
+        for item in to_list(value):
+            resolved = resolve_note_path(item)
+            if resolved is not None:
+                paths.append(resolved)
+                continue
+            tentative = ROOT / item
+            if tentative.exists():
+                paths.append(tentative)
+            elif tentative.suffix == "":
+                paths.append(ROOT / f"{item}.md")
+            else:
+                paths.append(tentative)
+    return unique_paths(paths)
+
+
+def contains_full_text_section(path: Path) -> bool:
+    if not path.exists():
+        return False
+    text = path.read_text(encoding="utf-8")
+    return "## 全文（逐页）" in text and "### 第 " in text
 
 
 def check_staged_tasks() -> list[str]:
@@ -214,6 +251,42 @@ def check_staged_tasks() -> list[str]:
             errors.append(f"{rel_task}: 结构化文件缺少 source_file")
 
         if input_type == "pdf":
+            full_content_paths = resolve_paths_from_values(
+                [
+                    task_fm.get("full_content_output"),
+                    task_fm.get("full_content_outputs"),
+                    structured_fm.get("full_content_output"),
+                    structured_fm.get("full_content_outputs"),
+                ]
+            )
+            if not full_content_paths:
+                errors.append(
+                    f"{rel_task}: PDF任务缺少 full_content_output/full_content_outputs"
+                )
+            else:
+                total_pdf_sources = 1 + len(to_list(task_fm.get("source_file_extra")))
+                if len(full_content_paths) < total_pdf_sources:
+                    errors.append(
+                        f"{rel_task}: 全量文件数量不足（需覆盖{total_pdf_sources}个源PDF，当前{len(full_content_paths)}个）"
+                    )
+
+                for full_path in full_content_paths:
+                    rel_full = full_path.relative_to(ROOT).as_posix()
+                    if not full_path.exists():
+                        errors.append(f"{rel_task}: full content 文件不存在 -> {rel_full}")
+                        continue
+                    full_fm = parse_frontmatter(full_path)
+                    if not boolish(full_fm.get("full_coverage")):
+                        errors.append(
+                            f"{rel_task}: {rel_full} 缺少 full_coverage: true"
+                        )
+                    if not full_fm.get("source_file"):
+                        errors.append(f"{rel_task}: {rel_full} 缺少 source_file")
+                    if not contains_full_text_section(full_path):
+                        errors.append(
+                            f"{rel_task}: {rel_full} 缺少“全文（逐页）”区块或逐页内容"
+                        )
+
             is_product = boolish(task_fm.get("is_product_file")) or boolish(
                 structured_fm.get("is_product_file")
             )
@@ -224,41 +297,20 @@ def check_staged_tasks() -> list[str]:
             if not is_product:
                 continue
 
-            raw_card_paths = (
-                to_list(task_fm.get("product_card_paths"))
-                + to_list(structured_fm.get("product_card_paths"))
+            card_paths = resolve_paths_from_values(
+                [
+                    task_fm.get("product_card_paths"),
+                    structured_fm.get("product_card_paths"),
+                ]
             )
-            card_paths: list[Path] = []
-            for item in raw_card_paths:
-                resolved = resolve_note_path(item)
-                if resolved is not None:
-                    card_paths.append(resolved)
-                else:
-                    tentative = ROOT / item
-                    if tentative.exists():
-                        card_paths.append(tentative)
-                    elif tentative.suffix == "":
-                        card_paths.append(ROOT / f"{item}.md")
-                    else:
-                        card_paths.append(tentative)
-
-            unique_cards: list[Path] = []
-            seen = set()
-            for card in card_paths:
-                key = card.as_posix()
-                if key in seen:
-                    continue
-                seen.add(key)
-                unique_cards.append(card)
-
-            if not unique_cards:
+            if not card_paths:
                 errors.append(
                     f"{rel_task}: 产品文件任务需填写 product_card_paths 并指向至少1个产品卡"
                 )
                 continue
 
             required_keys = ["official_name", "category", "status", "tags"]
-            for card in unique_cards:
+            for card in card_paths:
                 rel_card = card.relative_to(ROOT).as_posix()
                 if not card.exists():
                     errors.append(f"{rel_task}: product_card_paths 文件不存在 -> {rel_card}")

@@ -46,6 +46,7 @@ created: 2026-03-03
 - 文档摘要（目标、结论、行动项）
 - 结构化字段（日期、客户名、产品、金额、风险点）
 - 页码定位（便于回查）
+ - 全量覆盖文件（逐页全文，覆盖原 PDF 所有页面）
 3. 若为产品文件，先更新对应产品卡后再分派（见“产品文件专项规则”）。
 4. 根据用途分派：
 - 销售方案相关 -> `business_dev`
@@ -78,6 +79,7 @@ parsed_date: YYYY-MM-DD
 dispatch_to: [business_dev]
 is_product_file: true | false
 product_card_paths: ["[[02-business-dev/knowledge/product-cards/xxx]]"]
+full_content_output: "[[_agent-system/intake/parsed/PDF-full-YYYYMMDD-xxx]]"
 ```
 
 正文至少包含：
@@ -103,4 +105,5 @@ product_card_paths: ["[[02-business-dev/knowledge/product-cards/xxx]]"]
 - `deliverable` 必须是 `[[双向链接]]`
 - 有信息缺口时状态改为 `blocked`，并列明缺什么
 - 未生成结构化 Markdown，不得创建下游分派任务
+- 未生成 PDF 全量覆盖文件（逐页全文），不得将 PDF 输入任务标记为 `done`
 - 产品文件未回写产品卡，不得标记输入任务为 `done`

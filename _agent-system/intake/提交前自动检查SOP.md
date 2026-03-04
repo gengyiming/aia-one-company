@@ -31,7 +31,12 @@ updated: 2026-03-04
 3. 结构化文件必须包含：
    - `parse_status` in `complete|partial`
    - `source_file`
-4. 若识别为产品文件（`is_product_file: true` 或源文件名命中产品关键词）：
+4. 若 `input_type: pdf`：
+   - 必须提供 `full_content_output` 或 `full_content_outputs`
+   - 所有全量文件必须存在并包含 `full_coverage: true`
+   - 全量文件正文必须包含“`## 全文（逐页）`”区块
+   - 若任务含 `source_file_extra`，全量文件数量必须覆盖全部源 PDF 数量
+5. 若识别为产品文件（`is_product_file: true` 或源文件名命中产品关键词）：
    - 必须提供 `product_card_paths`
    - 目标产品卡必须存在
    - 产品卡 frontmatter 必须包含：

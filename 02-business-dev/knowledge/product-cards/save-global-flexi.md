@@ -79,6 +79,10 @@ tags: [业务, 产品, 官网, 储蓄, 退休]
 
 - [[_agent-system/intake/parsed/PDF-解析结果-20260304-环宇盈活资料包]]
 - [[_agent-system/intake/parsed/输入结构化-20260304-环宇盈活资料包-重跑]]
+- [[_agent-system/intake/parsed/PDF-full-20260304-global-flexi-brochure]]
+- [[_agent-system/intake/parsed/PDF-full-20260304-global-flexi-gf-booklet]]
+- [[_agent-system/intake/parsed/PDF-full-20260304-global-flexi-one-pager]]
+- [[_agent-system/intake/parsed/PDF-full-20260304-global-flexi-ppt]]
 - [[_agent-system/intake/raw/pdf/环宇盈活储蓄保险计划 产品一页精华.pdf]]
 - [[_agent-system/intake/raw/pdf/环宇盈活储蓄保险计划(GF) 产品小册子.pdf]]
 
