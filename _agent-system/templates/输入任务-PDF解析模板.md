@@ -12,6 +12,7 @@ source_file: "[[路径/文件.pdf]]"
 deliverable: "[[_agent-system/intake/parsed/PDF-解析结果-YYYYMMDD]]"
 structured_output: "[[_agent-system/intake/parsed/输入结构化-YYYYMMDD-XXX]]"
 full_content_output: "[[_agent-system/intake/parsed/PDF-full-YYYYMMDD-xxx]]"
+document_logic_type: policy | product | contract | report | presentation | mixed
 is_product_file: false
 product_card_paths: []
 review_score: ""
@@ -26,12 +27,11 @@ tags: [任务, 输入处理, PDF]
 - 这份 PDF 要支持什么决策或动作？
 
 ## 解析要求
-- [ ] 先生成结构化 Markdown（使用 `[[_agent-system/templates/输入任务-结构化输出模板]]`）
+- [ ] 先识别文档逻辑类型并选择解析策略（`[[_agent-system/intake/PDF结构化解析策略库]]`）
+- [ ] 再生成结构化 Markdown（使用 `[[_agent-system/templates/输入任务-结构化输出模板]]`）
 - [ ] 生成全量覆盖 Markdown（逐页全文，覆盖原 PDF 全部页面）
-- [ ] 200 字内摘要
-- [ ] 关键字段表（客户名/产品/金额/时间）
-- [ ] 风险点与待确认项
-- [ ] 页码定位（证据出处）
+- [ ] 正文按 PDF 原文逻辑展开（不套固定章节）
+- [ ] 每个关键结论提供页码证据
 - [ ] 若是产品文件，已更新对应产品卡并校验 Dataview 字段
 
 ## 下游分派计划

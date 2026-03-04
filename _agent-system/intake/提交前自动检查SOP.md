@@ -31,6 +31,7 @@ updated: 2026-03-04
 3. 结构化文件必须包含：
    - `parse_status` in `complete|partial`
    - `source_file`
+   - `document_logic_type`（标明该PDF的实际内容逻辑类型）
 4. 若 `input_type: pdf`：
    - 必须提供 `full_content_output` 或 `full_content_outputs`
    - 所有全量文件必须存在并包含 `full_coverage: true`

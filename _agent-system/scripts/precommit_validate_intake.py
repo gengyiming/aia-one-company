@@ -251,6 +251,26 @@ def check_staged_tasks() -> list[str]:
             errors.append(f"{rel_task}: 结构化文件缺少 source_file")
 
         if input_type == "pdf":
+            logic_type = str(
+                structured_fm.get("document_logic_type", task_fm.get("document_logic_type", ""))
+            ).strip().lower()
+            allowed_logic_types = {
+                "policy",
+                "product",
+                "contract",
+                "report",
+                "presentation",
+                "mixed",
+            }
+            if not logic_type:
+                errors.append(
+                    f"{rel_task}: PDF任务缺少 document_logic_type（需在结构化文件或任务中声明）"
+                )
+            elif logic_type not in allowed_logic_types:
+                errors.append(
+                    f"{rel_task}: document_logic_type 非法 -> {logic_type}（允许值: {', '.join(sorted(allowed_logic_types))}）"
+                )
+
             full_content_paths = resolve_paths_from_values(
                 [
                     task_fm.get("full_content_output"),

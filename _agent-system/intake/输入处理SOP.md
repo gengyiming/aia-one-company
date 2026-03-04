@@ -42,13 +42,13 @@ created: 2026-03-03
 ## PDF 输入流程
 
 1. 用模板：`[[_agent-system/templates/输入任务-PDF解析模板]]`
-2. 必做结构化输出（先于任何分派）：
-- 文档摘要（目标、结论、行动项）
-- 结构化字段（日期、客户名、产品、金额、风险点）
-- 页码定位（便于回查）
- - 全量覆盖文件（逐页全文，覆盖原 PDF 所有页面）
-3. 若为产品文件，先更新对应产品卡后再分派（见“产品文件专项规则”）。
-4. 根据用途分派：
+2. 先识别文档逻辑类型并选用解析策略：`[[_agent-system/intake/PDF结构化解析策略库]]`
+3. 必做结构化输出（先于任何分派）：
+- 按文档实际逻辑组织正文（禁止硬套统一章节）
+- 关键结论必须有页码证据
+- 全量覆盖文件（逐页全文，覆盖原 PDF 所有页面）
+4. 若为产品文件，先更新对应产品卡后再分派（见“产品文件专项规则”）。
+5. 根据用途分派：
 - 销售方案相关 -> `business_dev`
 - 保单服务/理赔相关 -> `customer_service`
 - 内容提炼 -> `content_marketing`
@@ -76,19 +76,18 @@ source_file: "[[_agent-system/intake/raw/原始文件]]"
 parse_status: complete | partial | failed
 parsed_by: ceo
 parsed_date: YYYY-MM-DD
+document_logic_type: policy | product | contract | report | presentation | mixed
 dispatch_to: [business_dev]
 is_product_file: true | false
 product_card_paths: ["[[02-business-dev/knowledge/product-cards/xxx]]"]
 full_content_output: "[[_agent-system/intake/parsed/PDF-full-YYYYMMDD-xxx]]"
 ```
 
-正文至少包含：
-- 摘要
-- 关键字段
-- 待确认项
-- 分派建议
-- 回写位置
-- （可选）产品识别结果
+正文要求（逻辑驱动）：
+- 不限定统一章节名，必须按 PDF 原文逻辑展开
+- 必须体现“逻辑识别 -> 内容展开 -> 执行分派”
+- 必须保留回写位置与全文覆盖文件链接
+- 产品文件必须保留“产品识别结果”段落
 
 ## 产品文件专项规则
 
